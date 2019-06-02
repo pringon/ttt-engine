@@ -1,13 +1,11 @@
 module Engine.Moves
-    ( 
+    (getMoves
+    ,Move
     ) where
 
-data Square = X | O | Empty deriving (Show, Read, Eq)
-newtype Board = Board { getBoard :: [[Square]] }
+import Engine.Board
 
--- getMoves :: Board -> [Board]
--- getMoves (Board b) = 
+type Move = (Int, Int)
 
--- getEmptySquares :: Board -> [(Int, Int)]
--- getEmptySquares = foldl (\acc x -> acc ++ (findEmpty x))
---  where findEmpty = findIndices (== Empty)
+getMoves :: Board -> [Move]
+getMoves b = []
