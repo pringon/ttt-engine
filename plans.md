@@ -25,12 +25,17 @@
 ### Square 
 
 - State of a square.
-- available values are X, O and Empty.
+- Available values are X, O and Empty.
 
 ## Board
 
-- a 3x3 matrix of Squares.
-- contains a possible game state.
+- A 3x3 matrix of Squares.
+- Contains a possible game state.
+
+## State
+
+- The current state of the game
+- Available values are Win, Loss, Draw, Unfinished.
 
 ## Move
 
@@ -39,8 +44,8 @@
 
 ## Color
 
-- determines which player should act next.
-- available values are 1 (engine) and -1 (human).
+- Determines which player should act next.
+- Available values are 1 (engine) and -1 (human).
 
 ## Functions
 
@@ -58,6 +63,13 @@
   - move to be taken ((Int, Int)).
 - returns:
   - new board state after the move was taken (Board).
+
+### getState
+
+- params:
+  - current board state (Board).
+-returns:
+  - the state of the game (State).
 
 ### findBestMove
 
