@@ -1,12 +1,15 @@
 module Engine.Board
   (fromMatrix
   ,toMatrix
+  ,getState
   ,toSquare
   ,Square(..)
+  ,State(..)
   ,Board
   ) where
 
 data Square = X | O | Empty deriving (Show, Read, Eq)
+data State = Unfinished | Draw | Loss | Win deriving (Show, Eq)
 type Board = [[Square]]
 
 fromMatrix :: [[String]] -> Maybe Board
@@ -22,6 +25,9 @@ toMatrix board =
     Just (map (mapRow fromSquare) board)
   else
     Nothing
+
+getState :: Board -> State
+getState b = Unfinished
 
 mapRow :: (a -> b) -> [a] -> [b]
 mapRow f = map f
