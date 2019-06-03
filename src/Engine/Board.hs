@@ -1,6 +1,7 @@
 module Engine.Board
   (fromMatrix
   ,convertSquare
+  ,Square(..)
   ,Board
   ) where
 

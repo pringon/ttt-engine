@@ -15,6 +15,7 @@ validMatrix = [
   ["X", "O", ""],
   ["X", "O", ""]]
 
+validBoard :: Board
 validBoard = map convertRow validMatrix
   where convertRow = map convertSquare
 
