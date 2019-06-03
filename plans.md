@@ -69,7 +69,7 @@
 
 - params:
   - current board state (Board).
--returns:
+- returns:
   - the state of the game (State).
 
 ### findBestMove
