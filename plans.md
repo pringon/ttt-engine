@@ -45,7 +45,7 @@
 ## Color
 
 - Determines which player should act next.
-- Available values are 1 (engine) and -1 (human).
+- Available values are Engine and Player.
 
 ## Functions
 
@@ -61,6 +61,7 @@
 - params:
   - current board state (Board).
   - move to be taken ((Int, Int)).
+  - player that takes the move (Color).
 - returns:
   - new board state after the move was taken (Board).
 
