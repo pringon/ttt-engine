@@ -1,6 +1,7 @@
 module Engine.Board
   (fromMatrix
-  ,convertSquare
+  ,toMatrix
+  ,toSquare
   ,Square(..)
   ,Board
   ) where
@@ -11,19 +12,33 @@ type Board = [[Square]]
 fromMatrix :: [[String]] -> Maybe Board
 fromMatrix sboard =
   if isValid sboard then
-    Just (map fromRow sboard)
+    Just (map (mapRow toSquare) sboard)
   else
     Nothing
 
-fromRow :: [String] -> [Square]
-fromRow = map convertSquare
+toMatrix :: Board -> Maybe [[String]]
+toMatrix board = 
+  if isValid board then
+    Just (map (mapRow fromSquare) board)
+  else
+    Nothing
 
-convertSquare :: String -> Square
-convertSquare square = 
+mapRow :: (a -> b) -> [a] -> [b]
+mapRow f = map f
+
+toSquare :: String -> Square
+toSquare square = 
   case reads square of
     [(X, "")] -> X
     [(O, "")] -> O
     _ -> Empty
+
+fromSquare :: Square -> String
+fromSquare square = 
+  case square of
+    X -> "X"
+    O -> "O"
+    _ -> ""
 
 
 isValid :: [[a]] -> Bool
