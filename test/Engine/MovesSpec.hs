@@ -36,4 +36,4 @@ spec = do
       (getMoves stubBoard) `shouldBe` moves
   describe "takeMove" $ do
     it "should return the correct board state when given a valid board state and a valid move" $ do
-      (takeMove stubBoard (moves !! 1) Engine) `shouldBe` moveTakenBoard
+      (takeMove stubBoard (0, 0) Engine) `shouldBe` moveTakenBoard
