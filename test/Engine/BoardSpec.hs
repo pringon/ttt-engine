@@ -33,6 +33,18 @@ rowMatrix = [
   ["", "", ""],
   ["", "", ""]]
 
+mainDiagMatrix :: [[String]]
+mainDiagMatrix = [
+  ["O", "", ""],
+  ["", "O", ""],
+  ["", "", "O"]]
+
+secondDiagMatrix :: [[String]]
+secondDiagMatrix = [
+  ["", "", "O"],
+  ["", "O", ""],
+  ["O", "", ""]]
+
 invalidBoard :: Board
 invalidBoard = [
   [Empty, X, Empty],
@@ -51,6 +63,10 @@ rowBoard :: Board
 rowBoard = let (Just b) = fromMatrix rowMatrix in b
 colBoard :: Board
 colBoard = let (Just b) = fromMatrix colMatrix in b
+mainDiagBoard :: Board
+mainDiagBoard = let (Just b) = fromMatrix colMatrix in b
+secondDiagBoard :: Board
+secondDiagBoard = let (Just b) = fromMatrix colMatrix in b
 
 spec :: Spec
 spec = do
@@ -73,3 +89,7 @@ spec = do
       (getState rowBoard) `shouldBe` Won
     it "should be able to see winning columns" $ do
       (getState colBoard) `shouldBe` Won
+    it "should be able to see win in main diagonal" $ do
+      (getState mainDiagBoard) `shouldBe` Won
+    it "should be able to see win in secondary diagonal" $ do
+      (getState secondDiagBoard) `shouldBe` Won

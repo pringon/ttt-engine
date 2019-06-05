@@ -41,7 +41,8 @@ getState b =
   let r = foldl (\acc x -> max acc x) Draw $ map checkLine b
       b' = rowToCol b
       c = foldl (\acc x -> max acc x) Draw $ map checkLine b'
-  in max r c
+      d = checkDiags b
+  in max d $ max r c
 
 checkLine :: [Square] -> State
 checkLine l = foldl (checkSquare (l !! 0)) Won l
