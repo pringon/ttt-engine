@@ -21,11 +21,17 @@ drawMatrix = [
   ["X", "O", "O"],
   ["X", "O", "X"]]
 
-winMatrix :: [[String]]
-winMatrix = [
+colMatrix :: [[String]]
+colMatrix = [
   ["", "X", "O"],
   ["X", "O", "O"],
   ["X", "O", "O"]]
+
+rowMatrix :: [[String]]
+rowMatrix = [
+  ["O", "O", "O"],
+  ["", "", ""],
+  ["", "", ""]]
 
 invalidBoard :: Board
 invalidBoard = [
@@ -41,8 +47,10 @@ validBoard = [
 
 drawBoard :: Board
 drawBoard = let (Just b) = fromMatrix drawMatrix in b
-winBoard :: Board
-winBoard = let (Just b) = fromMatrix winMatrix in b
+rowBoard :: Board
+rowBoard = let (Just b) = fromMatrix rowMatrix in b
+colBoard :: Board
+colBoard = let (Just b) = fromMatrix colMatrix in b
 
 spec :: Spec
 spec = do
@@ -61,5 +69,7 @@ spec = do
       (getState validBoard) `shouldBe` Unfinished
     it "should be able to tell that a game finished in a draw" $ do
       (getState drawBoard) `shouldBe` Draw
-    it "should be able to tell that a game finished in a win" $ do
-      (getState winBoard) `shouldBe` Won
+    it "should be able to see winning rows" $ do
+      (getState rowBoard) `shouldBe` Won
+    it "should be able to see winning columns" $ do
+      (getState colBoard) `shouldBe` Won
