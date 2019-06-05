@@ -44,6 +44,13 @@ getState b =
       d = checkDiags b
   in max d $ max r c
 
+checkDiags :: Board -> State
+checkDiags b = 
+  let len = length b
+      d1 = checkLine $ zipWith (\x y -> x !! y) b [0..]
+      d2 = checkLine $ zipWith (\x y -> x !! y) b [len-1,len-2..]
+  in max d1 d2
+
 checkLine :: [Square] -> State
 checkLine l = foldl (checkSquare (l !! 0)) Won l
   where checkSquare first s Empty = min s Unfinished
@@ -55,9 +62,6 @@ rowToCol :: [[a]] -> [[a]]
 rowToCol b =
   let accum = ZipList (replicate (length b) []) 
   in getZipList $ foldr (\xs acc -> (:) <$> (ZipList xs) <*> acc) accum b
-
-checkDiags :: Board -> State
-checkDiags b = Unfinished
 
 toSquare :: String -> Square
 toSquare square = 
