@@ -2,35 +2,58 @@ module Engine.Board
   (fromMatrix
   ,toMatrix
   ,getState
-  ,toSquare
   ,Square(..)
   ,State(..)
   ,Board
   ) where
 
+import Control.Applicative
+
 data Square = X | O | Empty deriving (Show, Read, Eq)
-data State = Unfinished | Draw | Loss | Win deriving (Show, Eq)
 type Board = [[Square]]
+
+data State = Unfinished | Draw | Won deriving (Show, Eq)
+instance Ord State where
+  Won `compare` Won = EQ
+  Unfinished `compare` Unfinished = EQ
+  Draw `compare` Draw = EQ
+  Won `compare` _ = GT
+  _ `compare` Won = LT
+  Draw `compare` _ = LT
+  _ `compare` Draw = GT
 
 fromMatrix :: [[String]] -> Maybe Board
 fromMatrix sboard =
   if isValid sboard then
-    Just (map (mapRow toSquare) sboard)
+    Just (map (map toSquare) sboard)
   else
     Nothing
 
 toMatrix :: Board -> Maybe [[String]]
 toMatrix board = 
   if isValid board then
-    Just (map (mapRow fromSquare) board)
+    Just (map (map fromSquare) board)
   else
     Nothing
 
 getState :: Board -> State
-getState b = Unfinished
+getState b =
+  let r = foldl (\acc x -> max acc x) Draw $ map checkLine b
+      b' = rowToCol b
+      c = foldl (\acc x -> max acc x) Draw $ map checkLine b'
+      d = checkDiags b
+  in max d $ max r c
 
-mapRow :: (a -> b) -> [a] -> [b]
-mapRow f = map f
+checkLine :: [Square] -> State
+checkLine b = Unfinished
+
+rowToCol :: [[a]] -> [[a]]
+rowToCol b =
+  let accum = ZipList (replicate (length b) []) 
+  in getZipList $ foldr (\xs acc -> (:) <$> (ZipList xs) <*> acc) accum b
+
+checkDiags :: Board -> State
+checkDiags b = Unfinished
 
 toSquare :: String -> Square
 toSquare square = 
