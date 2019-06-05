@@ -41,11 +41,14 @@ getState b =
   let r = foldl (\acc x -> max acc x) Draw $ map checkLine b
       b' = rowToCol b
       c = foldl (\acc x -> max acc x) Draw $ map checkLine b'
-      d = checkDiags b
-  in max d $ max r c
+  in max r c
 
 checkLine :: [Square] -> State
-checkLine b = Unfinished
+checkLine l = foldl (checkSquare (l !! 0)) Won l
+  where checkSquare first s Empty = min s Unfinished
+        checkSquare first s x
+          | x == first = min s Won
+          | otherwise = if s == Unfinished then Unfinished else Draw
 
 rowToCol :: [[a]] -> [[a]]
 rowToCol b =
