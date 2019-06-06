@@ -1,5 +1,6 @@
 module Engine.Moves
-    (getMoves
+    (findBestMove
+    ,getMoves
     ,takeMove
     ,Move
     ,Color(..)
@@ -9,7 +10,11 @@ import Data.List
 import Engine.Board
 
 type Move = (Int, Int)
+type Score = Int
 data Color = Engine | Player
+
+findBestMove :: Board -> Color -> (Move, Score)
+findBestMove b c = ((99, 99), 0)
 
 getMoves :: Board -> [Move]
 getMoves b = concat $ zipWith parseRow b [0..]
