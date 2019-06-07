@@ -11,24 +11,25 @@ import Engine.Board
 
 type Move = (Int, Int)
 type Score = Int
+type Depth = Int
 data Color = Engine | Player deriving (Eq)
 
-findBestMove :: Color -> Board -> (Move, Score)
-findBestMove c b = 
+findBestMove :: Color -> Depth -> Board -> (Move, Score)
+findBestMove c d b = 
   case getState b of
-    Draw -> ((99, 99), 0)
-    Won -> ((99, 99), if c == Engine then 100 else -100)
+    Draw -> ((99, 99), 0 + d)
+    Won -> ((99, 99), if c == Engine then 100 - d else -100 + d)
     Unfinished -> 
-      let possibleMoves = mapMoves b c $ getMoves b
+      let possibleMoves = mapMoves b c d $ getMoves b
           minScore = ((99, 99), minBound :: Int)
       in inverse . foldl maxScore minScore $ possibleMoves
   where inverse (move, score) = (move, -score)
         maxScore acc x = if snd x > snd acc then x else acc
 
-mapMoves :: Board -> Color -> [Move] -> [(Move, Score)]
-mapMoves b c moves = zipWith zipScoreMove  (getMoveScores b c moves) moves
+mapMoves :: Board -> Color -> Depth -> [Move] -> [(Move, Score)]
+mapMoves b c d moves = zipWith zipScoreMove  (getMoveScores b c d moves) moves
   where zipScoreMove (_, score) move = (move, score)
-        getMoveScores b c moves = map (findBestMove (toggleColor c) . takeMove b c) moves
+        getMoveScores b c d moves = map (findBestMove (toggleColor c) (d + 1) . takeMove b c) moves
 
 getMoves :: Board -> [Move]
 getMoves b = concat $ zipWith parseRow b [0..]
