@@ -8,6 +8,7 @@ module Engine.Board
   ) where
 
 import Control.Applicative
+import Data.Char (toUpper)
 
 data Square = X | O | Empty deriving (Show, Read, Eq)
 type Board = [[Square]]
@@ -25,7 +26,7 @@ instance Ord State where
 fromMatrix :: [[String]] -> Maybe Board
 fromMatrix sboard =
   if isValid sboard then
-    Just (map (map toSquare) sboard)
+    Just (map (map $ toSquare . map toUpper) sboard)
   else
     Nothing
 
