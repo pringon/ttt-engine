@@ -36,9 +36,7 @@ spec = do
       (getMoves stubBoard) `shouldBe` moves
   describe "takeMove" $ do
     it "should return the correct board state when given a valid board state and a valid move" $ do
-      (takeMove stubBoard (0, 0) Engine) `shouldBe` moveTakenBoard
+      (takeMove stubBoard Engine (0, 0)) `shouldBe` moveTakenBoard
   describe "findBestMove" $ do
-    it "should find the player's best move in a given board state" $ do
-      (fst $ findBestMove stubBoard Player) `shouldBe` (0, 0)
     it "should find the engine's best move in a given board state" $ do
-      (fst $ findBestMove stubBoard Engine) `shouldBe` (0, 0)
+      (fst $ findBestMove Engine 0 stubBoard) `shouldBe` (0, 0)

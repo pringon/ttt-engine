@@ -2,6 +2,7 @@ module Engine.BoardSpec (spec) where
 
 import Test.Hspec
 import Engine.Board
+import Data.Char (toLower)
 
 invalidMatrix :: [[String]]
 invalidMatrix = [
@@ -14,6 +15,9 @@ validMatrix = [
   ["", "X", ""],
   ["X", "O", ""],
   ["X", "O", ""]]
+
+lowercaseMatrix :: [[String]]
+lowercaseMatrix = map (map (map toLower)) validMatrix
 
 drawMatrix :: [[String]]
 drawMatrix = [
@@ -75,6 +79,8 @@ spec = do
       (fromMatrix invalidMatrix) `shouldBe` Nothing
     it "should return a board when given a valid matrix" $ do
       (fromMatrix validMatrix) `shouldBe` Just validBoard
+    it "should return a board when given a valid, lowercase matrix" $ do
+      (fromMatrix lowercaseMatrix) `shouldBe` Just validBoard
   describe "toMatrix" $ do
     it "should return nothing for invalid boards" $ do
       (toMatrix invalidBoard) `shouldBe` Nothing
