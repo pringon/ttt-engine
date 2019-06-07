@@ -16,7 +16,7 @@ jobs:
             git config user.name "dummy"
             git config user.email "dumy@example.org"
             git fetch origin master
-            git merge --square origin/master
+            git merge --squash origin/master
       - restore_cache:
           keys:
             - cci-demo-haskell-v1-{{ checksum "package.yaml" }}-{{ checksum "stack.yaml" }} 
