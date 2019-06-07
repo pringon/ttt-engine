@@ -18,20 +18,23 @@ findBestMove c b =
   case getState b of
     Draw -> ((99, 99), 0)
     Won -> ((99, 99), if c == Engine then 100 else -100)
-    Unfinished -> inverse . foldl (\acc x -> if snd x > snd acc then x else acc) ((99, 99), minBound :: Int) . mapMoves b c $ getMoves b
+    Unfinished -> 
+      let possibleMoves = mapMoves b c $ getMoves b
+          minScore = ((99, 99), minBound :: Int)
+      in inverse . foldl maxScore minScore $ possibleMoves
   where inverse (move, score) = (move, -score)
-        -- compareMoves c (_, x) (_, y) = if c == Engine then y `compare` x else x `compare` y
-        -- getBound c = if c == Engine then minBound else maxBound
+        maxScore acc x = if snd x > snd acc then x else acc
+
+mapMoves :: Board -> Color -> [Move] -> [(Move, Score)]
+mapMoves b c moves = zipWith zipScoreMove  (getMoveScores b c moves) moves
+  where zipScoreMove (_, score) move = (move, score)
+        getMoveScores b c moves = map (findBestMove (toggleColor c) . takeMove b c) moves
 
 getMoves :: Board -> [Move]
 getMoves b = concat $ zipWith parseRow b [0..]
 
 takeMove :: Board -> Color -> Move -> Board
 takeMove b c m = zipWith (updateRow m c) b [0..]
-
-mapMoves :: Board -> Color -> [Move] -> [(Move, Score)]
-mapMoves b c moves = zipWith (\(_, score) move -> (move, score)) (getMoveScores b c moves) moves
-  where getMoveScores b c moves = map (findBestMove (toggleColor c) . takeMove b c) moves
 
 updateRow :: Move -> Color -> [Square] -> Int -> [Square]
 updateRow m c r i = zipWith (\x j -> if (i, j) == m then getSymbol c else x) r [0..]
