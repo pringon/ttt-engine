@@ -1,0 +1,30 @@
+version: 2
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
+jobs:
+  test:
+    docker:
+      - image: fpco/stack:lts-13
+    steps:
+      - checkout
+      - run:
+          name: Merge with master
+          command: |
+            git config user.name "dummy"
+            git config user.email "dumy@example.org"
+            git fetch origin master
+            git merge --square origin/master
+      - restore_cache:
+          keys:
+            - cci-demo-haskell-v1-{{ checksum "package.yaml" }}-{{ checksum "stack.yaml" }} 
+      - run: stack setup
+      - run: stack test
+      - save_cache:
+          name: Cache deps
+          key: cci-demo-haskell-v1-{{ checksum "package.yaml" }}-{{ checksum "stack.yaml" }} 
+          paths:
+            - "/root/.stack"
+            - ".stack-work"
