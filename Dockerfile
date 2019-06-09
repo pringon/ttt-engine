@@ -8,5 +8,11 @@ WORKDIR /opt/app
 # Setup project.
 RUN stack setup
 
+# Build binaries.
+RUN stack build
+
+# Remove source files
+RUN rm -rf app src test
+
 # Test application
 CMD ["stack", "test"]
