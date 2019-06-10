@@ -15,4 +15,4 @@ RUN stack build
 RUN rm -rf app src test
 
 # Test application
-CMD ["stack", "test"]
+CMD ["stack", "exec", "engine-exe"]
