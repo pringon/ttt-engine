@@ -16,6 +16,9 @@ parseBody rawBody =
     [(b, "")] -> fromMatrix b
     _ -> Nothing
 
+extractMove :: (Move, a) -> [Int]
+extractMove ((x, y), _) = [x, y]
+
 application :: Request -> (Response -> IO ResponseReceived) -> IO ResponseReceived
 application req res = do
   body <- requestBody $ req
@@ -30,7 +33,7 @@ main = run 3000 application
 respond :: Board -> (Response -> IO ResponseReceived) -> IO ResponseReceived
 respond b res = do
   let nextMove = findBestMove Engine 0 b
-  res $ responseLBS status200 [("Content-Type", "text/plain")] $ BL.fromChunks . return . BS.pack . show $ nextMove
+  res $ responseLBS status200 [("Content-Type", "text/plain")] $ BL.fromChunks . return . BS.pack . show . extractMove $ nextMove
 
 handleError :: (Response -> IO ResponseReceived) -> IO ResponseReceived
 handleError res = res $ 
