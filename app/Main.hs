@@ -2,10 +2,11 @@
 module Main where
 
 import Network.Wai
-import Network.HTTP.Types (status200, status400)
+import Network.HTTP.Types (status200, status400, Header)
 import Network.Wai.Handler.Warp (run)
 import Data.ByteString.Lazy as BL
-import Data.ByteString.Char8 as BS
+import Data.ByteString.Lazy.Char8 as BL8
+import Data.ByteString.Char8 as BS8
 
 import Engine.Moves
 import Engine.Board
@@ -22,7 +23,7 @@ extractMove ((x, y), _) = [x, y]
 application :: Request -> (Response -> IO ResponseReceived) -> IO ResponseReceived
 application req res = do
   body <- requestBody $ req
-  let board = parseBody $ BS.unpack body
+  let board = parseBody $ BS8.unpack body
   case board of 
     (Just b) -> respond b res
     _ -> handleError res
@@ -33,8 +34,8 @@ main = run 3000 application
 respond :: Board -> (Response -> IO ResponseReceived) -> IO ResponseReceived
 respond b res = do
   let nextMove = findBestMove Engine 0 b
-  res $ responseLBS status200 [("Content-Type", "text/plain")] $ BL.fromChunks . return . BS.pack . show . extractMove $ nextMove
+  res $ responseLBS status200 [("Content-Type", "text/plain")] $ BL8.pack . show . extractMove $ nextMove
 
 handleError :: (Response -> IO ResponseReceived) -> IO ResponseReceived
-handleError res = res $ 
-  responseLBS status400 [("Content-Type", "text/plain")] "Incorrect board format."
+handleError res = res $ responseLBS status400 [("Content-Type", "text/plain")] "Incorrect board format."
+
