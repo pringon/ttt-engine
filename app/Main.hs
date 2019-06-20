@@ -11,6 +11,11 @@ import Data.ByteString.Char8 as BS8
 import Engine.Moves
 import Engine.Board
 
+defaultHeaders :: [Header]
+defaultHeaders = [
+  ("Content-Type", "text/plain"),
+  ("Access-Control-Allow-Origin", "*")]
+
 parseBody :: String -> Maybe Board
 parseBody rawBody =
   case reads rawBody of
@@ -34,8 +39,8 @@ main = run 3000 application
 respond :: Board -> (Response -> IO ResponseReceived) -> IO ResponseReceived
 respond b res = do
   let nextMove = findBestMove Engine 0 b
-  res $ responseLBS status200 [("Content-Type", "text/plain")] $ BL8.pack . show . extractMove $ nextMove
+  res $ responseLBS status200 defaultHeaders $ BL8.pack . show . extractMove $ nextMove
 
 handleError :: (Response -> IO ResponseReceived) -> IO ResponseReceived
-handleError res = res $ responseLBS status400 [("Content-Type", "text/plain")] "Incorrect board format."
+handleError res = res $ responseLBS status400 defaultHeaders "Incorrect board format."
 
