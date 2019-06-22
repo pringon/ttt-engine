@@ -11,40 +11,40 @@ import Data.ByteString.Char8 as BS8
 import Engine.Moves
 import Engine.Board
 
--- defaultHeaders :: [Header]
--- defaultHeaders = [
---   ("Content-Type", "text/plain"),
---   ("Access-Control-Allow-Origin", "*")]
+defaultHeaders :: [Header]
+defaultHeaders = [
+  ("Content-Type", "text/plain"),
+  ("Access-Control-Allow-Origin", "*")]
 
--- parseBody :: String -> Maybe Board
--- parseBody rawBody =
---   case reads rawBody of
---     [(b, "")] -> fromMatrix b
---     _ -> Nothing
+parseBody :: String -> Maybe Board
+parseBody rawBody =
+  case reads rawBody of
+    [(b, "")] -> fromMatrix b
+    _ -> Nothing
 
--- extractMove :: (Move, a) -> [Int]
--- extractMove ((x, y), _) = [x, y]
-
--- application :: Request -> (Response -> IO ResponseReceived) -> IO ResponseReceived
--- application req res = do
---   body <- requestBody $ req
---   let board = parseBody $ BS8.unpack body
---   case board of 
---     (Just b) -> respond b res
---     _ -> handleError res
-
--- main :: IO ()
--- main = run 3000 application
-
--- respond :: Board -> (Response -> IO ResponseReceived) -> IO ResponseReceived
--- respond b res = do
---   let nextMove = findBestMove Engine 0 b
---   res $ responseLBS status200 defaultHeaders $ BL8.pack . show . extractMove $ nextMove
-
--- handleError :: (Response -> IO ResponseReceived) -> IO ResponseReceived
--- handleError res = res $ responseLBS status400 defaultHeaders "Incorrect board format."
-
-import System.IO as EYEOH
+application :: Request -> (Response -> IO ResponseReceived) -> IO ResponseReceived
+application req res = do
+  body <- requestBody $ req
+  let board = parseBody $ BS8.unpack body
+  case board of 
+    (Just b) -> respond b res
+    _ -> handleError res
 
 main :: IO ()
-main = EYEOH.putStrLn "Hello"
+main = run 3000 application
+
+respond :: Board -> (Response -> IO ResponseReceived) -> IO ResponseReceived
+respond b res = do
+  let (move, _) = findBestMove Engine 0 b
+  let body = case getState b of
+        (Won, s) -> "{ winner: " ++ show s ++ ", move: null, draw: false }"
+        (Draw, _) -> "{ winner: null, move: null, draw: true }"
+        _ ->
+          case getState (takeMove b Engine move) of
+            (Won, s) -> "{ winner: " ++ show s ++ ", move: " ++ show move ++ ", draw: false }"
+            (Draw, _) -> "{ winner: null, move: " ++ show move ++ ", draw: true }"
+            _ -> "{ winner: null, move: " ++ show move ++ ", draw: false }"
+  res $ responseLBS status200 defaultHeaders $ BL8.pack body
+
+handleError :: (Response -> IO ResponseReceived) -> IO ResponseReceived
+handleError res = res $ responseLBS status400 defaultHeaders "Incorrect board format."
