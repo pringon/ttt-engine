@@ -88,14 +88,14 @@ spec = do
       (toMatrix validBoard) `shouldBe` Just validMatrix
   describe "getState" $ do
     it "should be able to tell that a game is unfinished" $ do
-      (getState validBoard) `shouldBe` Unfinished
+      (getState validBoard) `shouldBe` (Unfinished, Empty)
     it "should be able to tell that a game finished in a draw" $ do
-      (getState drawBoard) `shouldBe` Draw
+      (getState drawBoard) `shouldBe` (Draw, Empty)
     it "should be able to see winning rows" $ do
-      (getState rowBoard) `shouldBe` Won
+      (getState rowBoard) `shouldBe` (Won, O)
     it "should be able to see winning columns" $ do
-      (getState colBoard) `shouldBe` Won
+      (getState colBoard) `shouldBe` (Won, O)
     it "should be able to see win in main diagonal" $ do
-      (getState mainDiagBoard) `shouldBe` Won
+      (getState mainDiagBoard) `shouldBe` (Won, O)
     it "should be able to see win in secondary diagonal" $ do
-      (getState secondDiagBoard) `shouldBe` Won
+      (getState secondDiagBoard) `shouldBe` (Won, O)
