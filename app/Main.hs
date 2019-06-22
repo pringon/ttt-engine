@@ -35,15 +35,15 @@ main = run 3000 application
 
 respond :: Board -> (Response -> IO ResponseReceived) -> IO ResponseReceived
 respond b res = do
-  let (move, _) = findBestMove Engine 0 b
+  let ((x, y), _) = findBestMove Engine 0 b
   let body = case getState b of
         (Won, s) -> "{ winner: " ++ show s ++ ", move: null, draw: false }"
         (Draw, _) -> "{ winner: null, move: null, draw: true }"
         _ ->
-          case getState (takeMove b Engine move) of
-            (Won, s) -> "{ winner: " ++ show s ++ ", move: " ++ show move ++ ", draw: false }"
-            (Draw, _) -> "{ winner: null, move: " ++ show move ++ ", draw: true }"
-            _ -> "{ winner: null, move: " ++ show move ++ ", draw: false }"
+          case getState (takeMove b Engine (x, y)) of
+            (Won, s) -> "{ winner: " ++ show s ++ ", move: " ++ show [x, y] ++ ", draw: false }"
+            (Draw, _) -> "{ winner: null, move: " ++ show [x, y] ++ ", draw: true }"
+            _ -> "{ winner: null, move: " ++ show [x, y] ++ ", draw: false }"
   res $ responseLBS status200 defaultHeaders $ BL8.pack body
 
 handleError :: (Response -> IO ResponseReceived) -> IO ResponseReceived
