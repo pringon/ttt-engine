@@ -16,6 +16,12 @@ validMatrix = [
   ["X", "O", ""],
   ["X", "O", ""]]
 
+unfinishedMatrix :: [[String]]
+unfinishedMatrix = [
+  ["O", "O", "X"],
+  ["X", "X", "O"],
+  ["O", "X", ""]]
+
 lowercaseMatrix :: [[String]]
 lowercaseMatrix = map (map (map toLower)) validMatrix
 
@@ -61,6 +67,8 @@ validBoard = [
   [X, O, Empty],
   [X, O, Empty]]
 
+unfinishedBoard :: Board
+unfinishedBoard = let (Just b) = fromMatrix unfinishedMatrix in b
 drawBoard :: Board
 drawBoard = let (Just b) = fromMatrix drawMatrix in b
 rowBoard :: Board
@@ -88,6 +96,7 @@ spec = do
       (toMatrix validBoard) `shouldBe` Just validMatrix
   describe "getState" $ do
     it "should be able to tell that a game is unfinished" $ do
+      (getState unfinishedBoard) `shouldBe` (Unfinished, Empty)
       (getState validBoard) `shouldBe` (Unfinished, Empty)
     it "should be able to tell that a game finished in a draw" $ do
       (getState drawBoard) `shouldBe` (Draw, Empty)

@@ -65,7 +65,7 @@ checkDiags b =
 checkLine :: [Square] -> (State, Square)
 checkLine l = foldl (checkSquare (l !! 0)) (Won, l !! 0) l 
   where checkSquare :: Square -> (State, Square) -> Square -> (State, Square)
-        checkSquare first s Empty = worstState s (Unfinished, Empty)
+        checkSquare first s Empty = (Unfinished, Empty)
         checkSquare first s x
           | x == first = worstState s (Won, first)
           | otherwise = 
