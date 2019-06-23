@@ -17,9 +17,9 @@ data Color = Engine | Player deriving (Eq)
 findBestMove :: Color -> Depth -> Board -> (Move, Score)
 findBestMove c d b = 
   case getState b of
-    Draw -> ((99, 99), 0 + d)
-    Won -> ((99, 99), if c == Engine then 100 - d else -100 + d)
-    Unfinished -> 
+    (Draw, _) -> ((99, 99), 0 + d)
+    (Won, s) -> ((99, 99), if c == Engine then 100 - d else -100 + d)
+    (Unfinished, _) -> 
       let possibleMoves = mapMoves b c d $ getMoves b
           minScore = ((99, 99), minBound :: Int)
       in inverse . foldl maxScore minScore $ possibleMoves

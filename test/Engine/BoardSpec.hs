@@ -16,6 +16,12 @@ validMatrix = [
   ["X", "O", ""],
   ["X", "O", ""]]
 
+unfinishedMatrix :: [[String]]
+unfinishedMatrix = [
+  ["O", "O", "X"],
+  ["X", "X", "O"],
+  ["O", "X", ""]]
+
 lowercaseMatrix :: [[String]]
 lowercaseMatrix = map (map (map toLower)) validMatrix
 
@@ -61,6 +67,8 @@ validBoard = [
   [X, O, Empty],
   [X, O, Empty]]
 
+unfinishedBoard :: Board
+unfinishedBoard = let (Just b) = fromMatrix unfinishedMatrix in b
 drawBoard :: Board
 drawBoard = let (Just b) = fromMatrix drawMatrix in b
 rowBoard :: Board
@@ -88,14 +96,15 @@ spec = do
       (toMatrix validBoard) `shouldBe` Just validMatrix
   describe "getState" $ do
     it "should be able to tell that a game is unfinished" $ do
-      (getState validBoard) `shouldBe` Unfinished
+      (getState unfinishedBoard) `shouldBe` (Unfinished, Empty)
+      (getState validBoard) `shouldBe` (Unfinished, Empty)
     it "should be able to tell that a game finished in a draw" $ do
-      (getState drawBoard) `shouldBe` Draw
+      (getState drawBoard) `shouldBe` (Draw, Empty)
     it "should be able to see winning rows" $ do
-      (getState rowBoard) `shouldBe` Won
+      (getState rowBoard) `shouldBe` (Won, O)
     it "should be able to see winning columns" $ do
-      (getState colBoard) `shouldBe` Won
+      (getState colBoard) `shouldBe` (Won, O)
     it "should be able to see win in main diagonal" $ do
-      (getState mainDiagBoard) `shouldBe` Won
+      (getState mainDiagBoard) `shouldBe` (Won, O)
     it "should be able to see win in secondary diagonal" $ do
-      (getState secondDiagBoard) `shouldBe` Won
+      (getState secondDiagBoard) `shouldBe` (Won, O)
