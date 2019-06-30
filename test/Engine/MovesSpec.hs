@@ -4,6 +4,8 @@ import Test.Hspec
 import Engine.Board
 import Engine.Moves
 
+import Data.Maybe
+
 stubMatrix :: [[String]]
 stubMatrix = [
   ["", "X", ""],
@@ -40,3 +42,8 @@ spec = do
   describe "findBestMove" $ do
     it "should find the engine's best move in a given board state" $ do
       (fst $ findBestMove Engine 0 stubBoard) `shouldBe` (0, 0)
+    it "should pick the move that limits player's option the most" $ do
+      (fst $ findBestMove Engine 0 $ fromJust . fromMatrix $ [
+        ["", "", ""],
+        ["", "", ""],
+        ["", "", "X"]]) `shouldBe` (1, 1)
