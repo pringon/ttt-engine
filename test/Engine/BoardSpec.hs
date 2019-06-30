@@ -55,6 +55,12 @@ secondDiagMatrix = [
   ["", "O", ""],
   ["O", "", ""]]
 
+colPlayerMatrix :: [[String]]
+colPlayerMatrix = [
+  ["", "", "X"],
+  ["", "", "X"],
+  ["", "", "X"]]
+
 invalidBoard :: Board
 invalidBoard = [
   [Empty, X, Empty],
@@ -79,6 +85,8 @@ mainDiagBoard :: Board
 mainDiagBoard = let (Just b) = fromMatrix colMatrix in b
 secondDiagBoard :: Board
 secondDiagBoard = let (Just b) = fromMatrix colMatrix in b
+colPlayerBoard :: Board
+colPlayerBoard = let (Just b) = fromMatrix colPlayerMatrix in b
 
 spec :: Spec
 spec = do
@@ -108,3 +116,5 @@ spec = do
       (getState mainDiagBoard) `shouldBe` (Won, O)
     it "should be able to see win in secondary diagonal" $ do
       (getState secondDiagBoard) `shouldBe` (Won, O)
+    it "should be able to see a player winning by column" $ do
+      (getState colPlayerBoard) `shouldBe` (Won, X)
